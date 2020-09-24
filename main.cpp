@@ -11,7 +11,7 @@ int main(int argc, char **argvw) {
   for(int i=0;i<10;i++)
     eff[i]=0;
 
-  //riempo l'istogramma dei bending power
+  //Filling the Bending Power histogram
   int power = -3;
   TH1* h1 = new TH1D("data", "Bending Power", 100, 0, 2);
   h1->GetXaxis()->SetTitle("BP");
@@ -24,7 +24,7 @@ int main(int argc, char **argvw) {
 	h1->Fill(BP[k],pow(p0[k],power));
   }
 
-  //riempo il grafico relativo all'efficienza
+  //Graphing the efficiency of the detector
   double p0x[10],p0y[10];
   for(int i=0;i<10;i++) {
     p0x[i]=(i+1)*100;
@@ -38,7 +38,7 @@ int main(int argc, char **argvw) {
   gr1->SetMarkerColor(4);
   gr1->SetMarkerStyle(7);
 
-  //riempo il grafico relativo a media e deviazione standard
+  //Graphing mean and SD
   double mean[N],std[N];
   TH1* ms = new TH1D("0", "mean", 1000, 0, 10);
   for(int i=0;i<5;i++) {
@@ -63,7 +63,7 @@ int main(int argc, char **argvw) {
   gr4->SetMarkerColor(4);
   gr4->SetMarkerStyle(7);
   
-  //disegno i grafici
+  //Canvas set-up
   TCanvas *c = new TCanvas();
   TPad *pad1 = new TPad("pad1", "pad 1", 0, 0.5, 0.5, 1);
   pad1->Draw();
