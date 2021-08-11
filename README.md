@@ -19,10 +19,13 @@ docker run -d --rm -it --name magnetic-spectrometer luciomoriconi/magnetic-spect
 ```
 Get the result of the simulation
 ```
-docker cp magnetic-spectrometer:/src/graph.png ${PWD}/output/graph.png
+docker cp magnetic-spectrometer:/src/graph.png ${PWD}/output/graph.png # Change the destination path to %cd%/output/graph.png if you're using Command Prompt
 ```
 Kill the container and delete the image
 ```
 docker kill magnetic-spectrometer
 docker image rm luciomoriconi/magnetic-spectrometer
 ```
+
+The list of commands can be found in `build.sh`. 
+If you're using Git Bash in your terminal, you might some issues if you use the commands separately, so I suggest using `build.sh`
