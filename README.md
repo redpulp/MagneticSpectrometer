@@ -16,9 +16,9 @@ Build and run the image
 docker build -t luciomoriconi/magnetic-spectrometer .
 docker run -d --rm -it --name magnetic-spectrometer luciomoriconi/magnetic-spectrometer
 ```
-Get the result of the simulation
+Get the result of the simulation (Change the destination path to %cd%/output/graph.png if you're using Command Prompt)
 ```
-docker cp magnetic-spectrometer:/src/graph.png ${PWD}/output/graph.png # Change the destination path to %cd%/output/graph.png if you're using Command Prompt
+docker cp magnetic-spectrometer:/src/graph.png ${PWD}/output/graph.png
 ```
 Kill the container and delete the image
 ```
