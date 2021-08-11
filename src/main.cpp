@@ -14,9 +14,9 @@ int main(int argc, char **argvw)
   int power = -3;
   TH1 *h1 = new TH1D("data", "Bending Power", 100, 0, 2);
   h1->GetXaxis()->SetTitle("BP");
-  for (int i = 0; i < 1000; i++)
-  {
-    pass = {0};
+  for(int i = 0; i < 1000; i++) {
+    for(int j = 0; j < N; j++)
+      pass[j] = false;
     generate(n, N, p0, eff, pass, BP);
     for (int k = 0; k < N; k++)
       if (pass[k])
@@ -89,5 +89,6 @@ int main(int argc, char **argvw)
   c->Update();
   c->Modified();
   c->Connect("Closed()", "TApplication", gApplication, "Terminate()");
-  theApp.Run();
+  // theApp.Run();
+  c->SaveAs("graph.png");
 }

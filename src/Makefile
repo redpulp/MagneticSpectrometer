@@ -4,7 +4,8 @@ R_CFLAGS  =     `root-config --cflags`
 R_ALL     =     $(R_LDFLAGS) $(R_LIBS)
 CXX      := g++
 CXXP     := g++ -c
-CXXFLAGS := -O -Wall -pedantic
+CXXFLAGS := -O -Wall #-pedantic
+SRC=./src/
 
 specter: main.o beam.o
 	$(CXX) main.o beam.o $(R_LIBS) -o specter
