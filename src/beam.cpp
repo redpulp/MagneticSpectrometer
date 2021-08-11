@@ -14,12 +14,11 @@ void generate(unsigned short int n, int N, double *p0, int *eff, bool *pass, dou
   //Particle beam properties
   double modv, phi, costh, vx, vy, vz, x, y, z;
 
-  //Every particle will be associated to the extrems of their paths inside the detector
+  //Every particle will be associated to the extremes of its path inside the detector
   double ax, ay, az, bx, by, bz;
 
   TRandom3 *rg = new TRandom3(0);
-  for (int i = 0; i < N; i++)
-  {
+  for (int i = 0; i < N; i++) {
     //n will determine the distribution of initial momentum
     if (n == 0)
       p0[i] = rg->Uniform(0.1, 1000);
@@ -39,15 +38,13 @@ void generate(unsigned short int n, int N, double *p0, int *eff, bool *pass, dou
     z = 1.95;
     x = x + (vx * 1.95) / vz;
     y = y + (vy * 1.95) / vz;
-    if (pow(x, 2) + pow(y, 2) <= 0.25)
-    {
-      //Calculating the Bending Power for particles inside the detector
+    if (pow(x, 2) + pow(y, 2) <= 0.25) {
+      //Calculating the Bending Power for the particles inside the detector
       pass[i] = 1;
       ax = x;
       ay = y;
       az = z;
-      while (pow(x, 2) + pow(y, 2) <= 1)
-      {
+      while (pow(x, 2) + pow(y, 2) <= 1) {
         vx0 = vx;
         vy0 = vy;
         vz0 = vz;
@@ -58,8 +55,7 @@ void generate(unsigned short int n, int N, double *p0, int *eff, bool *pass, dou
         y = y + h * (vy + h / 2 * vy);
         z = z + h * (vz + h / 2 * vz);
         //The fraction of particles passing through the whole detector will define its efficiency
-        if (z >= 2.95)
-        {
+        if (z >= 2.95) {
           int cy = (int)(p0[i] / 100);
           eff[cy]++;
           break;
