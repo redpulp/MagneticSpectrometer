@@ -7,7 +7,7 @@ Two parameters can be tweaked to play with the resolution of the simulation:
 
 ## The simulation
 
-An extensive description of how the simulation works, and its results, can be found in [Spettrometro magnetico](Spettrometro magnetico.pdf). The document is currently only in italian.
+An extensive description of how the simulation works, and its results, can be found in [Spettrometro magnetico](Spettrometro_magnetico.pdf). The document is currently only in italian.
 
 ## How to run locally
 This project was built to use Docker as a Makefile that will output the resulting graphs in `/output/graph.png`, run `build.sh` to build and generate the output. A rundown of what's inside the build file can be found below.
