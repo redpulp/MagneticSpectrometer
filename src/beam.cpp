@@ -1,50 +1,68 @@
 #include "header.h"
-using namespace std;
+#include <iostream>
 
 // To solve the motion equation
 double vadd(double v1, double v2, double B1, double B2)
 {
-  double v = B2 * v1 - B1 * v2;
-  return v;
+  return B2 * v1 - B1 * v2;
 }
 
-
 // To follow the entire particles' trajectory and extract data
-void generate(unsigned short int n, int N, double *p0, int *efficiency, bool *pass, double *BP)
+void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
 {
-  //Defining the magnetic field's components
+  // Initial momentum distribution
+  int power = -3;
+
+  // Defining the magnetic field's components
   double Bx = 0, By = 0.3, Bz = 0;
 
-  //Particle beam properties
+  // Particle beam properties
   double modv, phi, costh, vx, vy, vz, x, y, z;
 
-  //Every particle will be associated to the extremes of its path inside the detector
+  // Every particle will be associated to the extremes of its path inside the detector
   double ax, ay, az, bx, by, bz;
+
+  // Final values to eval
+  double bending_power;
+  double p0;
+  bool pass;
+
+  double square_size = 3.9;
+  double cylinder_base_z = 1.95;
 
   TRandom3 *rg = new TRandom3(0);
   for (int i = 0; i < N; i++) {
-    //n will determine the distribution of initial momentum
+    pass = false;
+    // Generating initial particle position
+    x = rg->Uniform(-square_size, square_size);
+    y = rg->Uniform(-square_size, square_size);
+    z = 0;
+
+    // n will determine the distribution of initial momentum
     if (n == 0)
-      p0[i] = rg->Uniform(0.1, 1000);
+      p0 = rg->Uniform(0.1, max_momentum);
     else
-      p0[i] = 0.01 * (pow(10, n));
-    modv = p0[i] / (sqrt(1 + p0[i]));
+      p0 = 0.01 * (pow(10, n));
+
+    // Generating initial direction and velocity
+    modv = p0 / (sqrt(1 + p0));
     phi = rg->Uniform(0, 6.283);
     costh = rg->Rndm();
     vx = modv * (sqrt(1 - costh)) * sin(phi);
     vy = modv * (sqrt(1 - costh)) * cos(phi);
     vz = modv * (sqrt(costh));
-    x = rg->Uniform(-3.9, 3.9);
-    y = rg->Uniform(-3.9, 3.9);
-    z = 1.95;
+
+    // Position after straight trajectory to reach the cylinder
+    x += (vx * cylinder_base_z) / vz;
+    y += (vy * cylinder_base_z) / vz;
+    z = cylinder_base_z;
 
     double vx0, vy0, vz0;
-    z = 1.95;
-    x = x + (vx * 1.95) / vz;
-    y = y + (vy * 1.95) / vz;
+
+    // If the particle is inside the cylinder, start calculating bended trajectory
     if (pow(x, 2) + pow(y, 2) <= 0.25) {
       //Calculating the Bending Power for the particles inside the detector
-      pass[i] = 1;
+      pass = true;
       ax = x;
       ay = y;
       az = z;
@@ -77,13 +95,13 @@ void generate(unsigned short int n, int N, double *p0, int *efficiency, bool *pa
           By
         );
 
-        x = x + h * (vx + h / 2 * vx);
-        y = y + h * (vy + h / 2 * vy);
-        z = z + h * (vz + h / 2 * vz);
+        x += h * (vx + h / 2 * vx);
+        y += h * (vy + h / 2 * vy);
+        z += h * (vz + h / 2 * vz);
         //The fraction of particles passing through the whole detector will define its efficiency
         if (z >= 2.95) {
-          int cy = (int)(p0[i] / 100);
-          efficiency[cy]++;
+          int index = (int)((p0 / max_momentum) * (eff_dist_steps));
+          efficiency[index]++;
           break;
         }
       }
@@ -94,7 +112,9 @@ void generate(unsigned short int n, int N, double *p0, int *efficiency, bool *pa
       double BPx = ((bz - az) * By) - ((by - ay) * Bz);
       double BPy = ((bx - ax) * Bz) - ((bz - az) * Bx);
       double BPz = ((by - ay) * Bx) - ((bx - ax) * By);
-      BP[i] = sqrt(pow(BPx, 2) + pow(BPy, 2) + pow(BPz, 2));
+      bending_power = sqrt(pow(BPx, 2) + pow(BPy, 2) + pow(BPz, 2));
+      h1->Fill(bending_power, pow(p0, power));
     }
+
   }
 }

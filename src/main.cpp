@@ -1,38 +1,29 @@
 #include "header.h"
 
-
-using namespace std;
 int main(int argc, char **argvw)
 {
   TApplication theApp("App", &argc, argvw);
-  const int N = 100000;  // Number of protons generated for the simulation
-  double p0[N];
-  double bending_power[N];
-  int efficiency[10] = {};
-  bool pass[N];
-  unsigned short int n = 0;
+  const int N = 100000;  // Number of protons generated for a signle simulation
+  const int iter_N = 1000; // Iterations of the simulation
+
+  int efficiency[eff_dist_steps] = {};
+  // bool pass[N];
+  unsigned short int init_momentum = 0;
 
   // Filling the Bending Power histogram
-  int power = -3;
   TH1 *h1 = new TH1D("data", "Bending Power", 100, 0, 2);
   h1->GetXaxis()->SetTitle("BP");
-  for (int i = 0; i < 1000; i++) {
-    std::fill_n(pass, N, false);
-    generate(n, N, p0, efficiency, pass, bending_power);
-    for (int k = 0; k < N; k++)
-      if (pass[k])
-        h1->Fill(bending_power[k], pow(p0[k], power));
+  for (int i = 0; i < iter_N; i++) {
+    generate_particles(init_momentum, N, efficiency, h1);
   }
 
   // Graphing the efficiency of the detector
-  const int steps = 10;
-  double p0x[steps], p0y[steps];
-  for (int i = 0; i < steps; i++) {
-    p0x[i] = (i + 1) * 100;
-    p0y[i] = (double)(efficiency[i]) / 1000000;
+  double p0x[eff_dist_steps], p0y[eff_dist_steps];
+  for (int i = 0; i < eff_dist_steps; i++) {
+    p0x[i] = (i + 1) * (max_momentum / eff_dist_steps);
+    p0y[i] = (double)(efficiency[i]) / (N * iter_N);
   }
-  // p0x[0] = 0.1;
-  TGraph *gr1 = new TGraph(steps, p0x, p0y);
+  TGraph *gr1 = new TGraph(eff_dist_steps, p0x, p0y);
   gr1->SetTitle("Efficiency");
   gr1->GetXaxis()->SetTitle("p (GeV)");
   gr1->SetMarkerColor(4);
@@ -41,15 +32,15 @@ int main(int argc, char **argvw)
   // Graphing mean and SD
   double mean[N], std[N];
   TH1 *ms = new TH1D("0", "mean", 1000, 0, 10);
+
   for (int i = 0; i < 5; i++) {
-    n++;
-    generate(n, N, p0, eff, pass, bending_power);
-    for (int j = 0; j < 1000; j++)
-      ms->Fill(bending_power[j]);
+    init_momentum++;
+    generate_particles(init_momentum, N, efficiency, ms);
     mean[i] = ms->GetMean();
     std[i] = ms->GetStdDev();
     ms->Reset();
   }
+
   double P0X[5] = {0.1, 1, 10, 100, 1000};
   TGraph *gr3 = new TGraph(5, P0X, mean);
   gr3->SetTitle("Mean");
@@ -88,6 +79,8 @@ int main(int argc, char **argvw)
   c->cd();
   c->Update();
   c->Modified();
+  c->SetCanvasSize(1600, 1200);  // Set the canvas size to double the resolution (adjust as needed)
+  c->SetWindowSize(1600 + (1600 - c->GetWw()), 1200 + (1200 - c->GetWh()));
   c->Connect("Closed()", "TApplication", gApplication, "Terminate()");
   //theApp.Run(); // Use this command to open canvas interactively
   c->SaveAs("graph.png");
