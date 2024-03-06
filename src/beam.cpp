@@ -1,12 +1,16 @@
 #include "header.h"
 using namespace std;
 
+// To solve the motion equation
 double vadd(double v1, double v2, double B1, double B2)
 {
   double v = B2 * v1 - B1 * v2;
   return v;
 }
-void generate(unsigned short int n, int N, double *p0, int *eff, bool *pass, double *BP)
+
+
+// To follow the entire particles' trajectory and extract data
+void generate(unsigned short int n, int N, double *p0, int *efficiency, bool *pass, double *BP)
 {
   //Defining the magnetic field's components
   double Bx = 0, By = 0.3, Bz = 0;
@@ -48,16 +52,38 @@ void generate(unsigned short int n, int N, double *p0, int *eff, bool *pass, dou
         vx0 = vx;
         vy0 = vy;
         vz0 = vz;
-        vx = vx0 + h * vadd(vy0 + (h / 2) * vadd(vy0, vz0, By, Bz), vz0 + h / 2 * vadd(vy0, vz0, By, Bz), By, Bz);
-        vy = vy0 + h * vadd(vz0 + (h / 2) * vadd(vz0, vx0, Bz, Bx), vx0 + h / 2 * vadd(vy0, vz0, Bz, Bx), Bz, Bx);
-        vz = vz0 + h * vadd(vx0 + (h / 2) * vadd(vx0, vy0, Bx, By), vy0 + h / 2 * vadd(vx0, vy0, Bx, By), Bx, By);
+
+        vx = vx0 + h * vadd
+        (
+          vy0 + (h / 2) * vadd(vy0, vz0, By, Bz),
+          vz0 + h / 2 * vadd(vy0, vz0, By, Bz),
+          By,
+          Bz
+        );
+
+        vy = vy0 + h * vadd
+        (
+          vz0 + (h / 2) * vadd(vz0, vx0, Bz, Bx),
+          vx0 + h / 2 * vadd(vy0, vz0, Bz, Bx),
+          Bz,
+          Bx
+        );
+
+        vz = vz0 + h * vadd
+        (
+          vx0 + (h / 2) * vadd(vx0, vy0, Bx, By),
+          vy0 + h / 2 * vadd(vx0, vy0, Bx, By),
+          Bx,
+          By
+        );
+
         x = x + h * (vx + h / 2 * vx);
         y = y + h * (vy + h / 2 * vy);
         z = z + h * (vz + h / 2 * vz);
         //The fraction of particles passing through the whole detector will define its efficiency
         if (z >= 2.95) {
           int cy = (int)(p0[i] / 100);
-          eff[cy]++;
+          efficiency[cy]++;
           break;
         }
       }

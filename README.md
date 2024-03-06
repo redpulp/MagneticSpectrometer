@@ -13,30 +13,34 @@ An extensive description of how the simulation works, and its results, can be fo
 
 ## How to run
 
-This project was built to use Docker as a Makefile that will output the resulting graphs in `/output/graph.png`, run `build.sh` to build and generate the output. A rundown of what's inside the build file can be found below.
+This project was built to use Docker as a Makefile that will output the resulting graphs in `/output/graph.png`, run `build.sh` to build and generate the output. Here's a rundown of what's inside the build file:
 
-Create directory for the output
+- Create directory for the output
 
 ```
 mkdir output
 ```
 
-Build and run the image
+- Build and run the image
 
 ```
-docker build -t luciomoriconi/magnetic-spectrometer .
-docker run -d --rm -it --name magnetic-spectrometer luciomoriconi/magnetic-spectrometer
+docker build -t redpulp/magnetic-spectrometer .
+docker run -d --rm -it --name magnetic-spectrometer redpulp/magnetic-spectrometer
 ```
 
-Get the result of the simulation (change the destination path to `%cd%/output/graph.png` if you're using Command Prompt)
+- Get the result of the simulation (change the destination path to `%cd%/output/graph.png` if you're using Command Prompt)
 
 ```
 docker cp magnetic-spectrometer:/src/graph.png ${PWD}/output/graph.png
 ```
 
-Kill the container and delete the image
+- Kill the container and delete the image
 
 ```
 docker kill magnetic-spectrometer
-docker image rm luciomoriconi/magnetic-spectrometer
+docker image rm redpulp/magnetic-spectrometer
 ```
+
+## Note of the author
+
+Please note that this project was made in my Uni years, I code better these days, I promise.
