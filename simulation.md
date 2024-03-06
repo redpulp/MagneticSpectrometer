@@ -73,3 +73,13 @@ $$
 $$
 
 With a conservative field that is independent from the position, we can calculate the integrals with B as fixed and the extremes of the particles' trajectory as the extremes of integration.
+
+#### Results
+
+Given a beam of $10^9$ protons, the distributions are plotted as follows:
+
+![Efficiency and Bending power plots](output/graph.png)
+
+The Bending Power values grows exponentially until it reaches a peak around 1.8, after which it's strong enough to divert the protons out of the detector before hitting the collector at the base, hence the quick decrease of occurrences.
+
+The efficiency of the detector grows linearly with the initial momentum of the particles, which have a lower probability of having their trajectory bent out of the cylinder the faster they pass through it.

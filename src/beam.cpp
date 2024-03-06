@@ -1,5 +1,4 @@
 #include "header.h"
-#include <iostream>
 
 // To solve the motion equation
 double vadd(double v1, double v2, double B1, double B2)
@@ -25,14 +24,12 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
   // Final values to eval
   double bending_power;
   double p0;
-  bool pass;
 
   double square_size = 3.9;
   double cylinder_base_z = 1.95;
 
   TRandom3 *rg = new TRandom3(0);
   for (int i = 0; i < N; i++) {
-    pass = false;
     // Generating initial particle position
     x = rg->Uniform(-square_size, square_size);
     y = rg->Uniform(-square_size, square_size);
@@ -62,7 +59,6 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
     // If the particle is inside the cylinder, start calculating bended trajectory
     if (pow(x, 2) + pow(y, 2) <= 0.25) {
       //Calculating the Bending Power for the particles inside the detector
-      pass = true;
       ax = x;
       ay = y;
       az = z;
@@ -100,20 +96,20 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
         z += h * (vz + h / 2 * vz);
         //The fraction of particles passing through the whole detector will define its efficiency
         if (z >= 2.95) {
-          int index = (int)((p0 / max_momentum) * (eff_dist_steps));
+          int index = std::min((int)((p0 / max_momentum) * (eff_dist_steps)), eff_dist_steps - 1);
           efficiency[index]++;
           break;
         }
+        bx = x;
+        by = y;
+        bz = z;
+        //Calculating the Bending Power using the components of the variation of the momentum
+        double BPx = ((bz - az) * By) - ((by - ay) * Bz);
+        double BPy = ((bx - ax) * Bz) - ((bz - az) * Bx);
+        double BPz = ((by - ay) * Bx) - ((bx - ax) * By);
+        bending_power = sqrt(pow(BPx, 2) + pow(BPy, 2) + pow(BPz, 2));
+        h1->Fill(bending_power, pow(p0, power));
       }
-      bx = x;
-      by = y;
-      bz = z;
-      //Calculating the Bending Power using the components of the variation of the momentum
-      double BPx = ((bz - az) * By) - ((by - ay) * Bz);
-      double BPy = ((bx - ax) * Bz) - ((bz - az) * Bx);
-      double BPz = ((by - ay) * Bx) - ((bx - ax) * By);
-      bending_power = sqrt(pow(BPx, 2) + pow(BPy, 2) + pow(BPz, 2));
-      h1->Fill(bending_power, pow(p0, power));
     }
 
   }

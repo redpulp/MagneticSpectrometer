@@ -4,15 +4,16 @@ int main(int argc, char **argvw)
 {
   TApplication theApp("App", &argc, argvw);
   const int N = 100000;  // Number of protons generated for a signle simulation
-  const int iter_N = 1000; // Iterations of the simulation
+  const int iter_N = 10000; // Iterations of the simulation
 
   int efficiency[eff_dist_steps] = {};
   // bool pass[N];
   unsigned short int init_momentum = 0;
 
   // Filling the Bending Power histogram
-  TH1 *h1 = new TH1D("data", "Bending Power", 100, 0, 2);
+  TH1 *h1 = new TH1D("data", "Bending Power", 200, 0, 1);
   h1->GetXaxis()->SetTitle("BP");
+
   for (int i = 0; i < iter_N; i++) {
     generate_particles(init_momentum, N, efficiency, h1);
   }
@@ -24,6 +25,11 @@ int main(int argc, char **argvw)
     p0y[i] = (double)(efficiency[i]) / (N * iter_N);
   }
   TGraph *gr1 = new TGraph(eff_dist_steps, p0x, p0y);
+
+  TF1* fitFunc = new TF1("fitFunc", "[0]*x + [1]", 0, 6);
+  fitFunc->SetParameters(1, 0);
+  gr1->Fit(fitFunc, "Q");
+
   gr1->SetTitle("Efficiency");
   gr1->GetXaxis()->SetTitle("p (GeV)");
   gr1->SetMarkerColor(4);
