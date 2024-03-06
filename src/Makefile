@@ -5,7 +5,7 @@ R_ALL     =     $(R_LDFLAGS) $(R_LIBS)
 CXX      := g++
 CXXP     := g++ -c
 CXXO		 := -fopenmp
-CXXFLAGS := -O -Wall #-pedantic
+CXXFLAGS := -O -Wall -pedantic
 
 specter: main.o beam.o
 	$(CXX)  $(CXXO) main.o beam.o $(R_LIBS) -o specter
