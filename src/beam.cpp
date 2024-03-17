@@ -11,6 +11,8 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
 {
   // Initial momentum distribution
   int power = -3;
+  // Magnetic field components
+  double Bx = 0, By = 0.3, Bz = 0;
 
   double square_size = 3.9;
   double cylinder_base_z = 1.95;
@@ -19,22 +21,15 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
   
   #pragma omp parallel for
   for (int i = 0; i < N; i++) {
-    // Defining the magnetic field's components
-    double Bx = 0, By = 0.3, Bz = 0;
-
-    // Particle beam properties
-    double modv, phi, costh, vx, vy, vz, x, y, z;
-
     // Every particle will be associated to the extremes of its path inside the detector
     double ax, ay, az, bx, by, bz;
 
     // Final values to eval
-    double bending_power;
     double p0;
     // Generating initial particle position
-    x = rg->Uniform(-square_size, square_size);
-    y = rg->Uniform(-square_size, square_size);
-    z = 0;
+    double x = rg->Uniform(-square_size, square_size);
+    double y = rg->Uniform(-square_size, square_size);
+    double z = 0;
 
     // n will determine the distribution of initial momentum
     if (n == 0)
@@ -43,12 +38,12 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
       p0 = 0.01 * (pow(10, n));
 
     // Generating initial direction and velocity
-    modv = p0 / (sqrt(1 + p0));
-    phi = rg->Uniform(0, 6.283);
-    costh = rg->Rndm();
-    vx = modv * (sqrt(1 - costh)) * sin(phi);
-    vy = modv * (sqrt(1 - costh)) * cos(phi);
-    vz = modv * (sqrt(costh));
+    double modv = p0 / (sqrt(1 + p0));
+    double phi = rg->Uniform(0, 6.283);
+    double costh = rg->Rndm();
+    double vx = modv * (sqrt(1 - costh)) * sin(phi);
+    double vy = modv * (sqrt(1 - costh)) * cos(phi);
+    double vz = modv * (sqrt(costh));
 
     // Position after straight trajectory to reach the cylinder
     x += (vx * cylinder_base_z) / vz;
@@ -108,7 +103,7 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
         double BPx = ((bz - az) * By) - ((by - ay) * Bz);
         double BPy = ((bx - ax) * Bz) - ((bz - az) * Bx);
         double BPz = ((by - ay) * Bx) - ((bx - ax) * By);
-        bending_power = sqrt(pow(BPx, 2) + pow(BPy, 2) + pow(BPz, 2));
+        double bending_power = sqrt(pow(BPx, 2) + pow(BPy, 2) + pow(BPz, 2));
         h1->Fill(bending_power, pow(p0, power));
       }
     }
