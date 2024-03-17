@@ -3,7 +3,7 @@ using namespace std;
 int main(int argc, char **argvw)
 {
   TApplication theApp("App", &argc, argvw);
-  const int N = 10000;  // Number of protons generated for the simulation
+  const int N = 100000;  // Number of protons generated for the simulation
   double p0[N];
   double BP[N];
   int eff[10] = {0};
