@@ -9,17 +9,11 @@ Two parameters can be tweaked to play with the resolution of the simulation:
 
 ## The simulation
 
-An extensive description of how the simulation works, and its results, can be found in [simulation.md](simulation.md). The ROOT library it's used for random numbers generation and data analysis.
+An extensive description of how the simulation works, and its results, can be found in [simulation.md](simulation.md). I used the ROOT library by CERN for random numbers generation and data analysis.
 
 ## How to run
 
-This project was built to use Docker as a Makefile that will output the resulting graphs in `/output/graph.png`, run `build.sh` to build and generate the output. Here's a rundown of what's inside the build file:
-
-- Create directory for the output
-
-```
-mkdir output
-```
+This project was containerized, so you only need Docker to run it. To generate the results in `/output/graph.png`, run `build.sh`. Here's a rundown of what's inside the build file:
 
 - Build and run the image
 

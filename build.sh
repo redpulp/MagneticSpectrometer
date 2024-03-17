@@ -1,4 +1,3 @@
-mkdir output
 echo "Building and running the image"
 docker build -t redpulp/magnetic-spectrometer .
 docker run -d --rm -it --name magnetic-spectrometer redpulp/magnetic-spectrometer
