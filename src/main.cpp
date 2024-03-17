@@ -1,52 +1,51 @@
 #include "header.h"
+
+
 using namespace std;
 int main(int argc, char **argvw)
 {
   TApplication theApp("App", &argc, argvw);
   const int N = 100000;  // Number of protons generated for the simulation
   double p0[N];
-  double BP[N];
-  int eff[10] = {0};
+  double bending_power[N];
+  int efficiency[10] = {};
   bool pass[N];
   unsigned short int n = 0;
 
-  //Filling the Bending Power histogram
+  // Filling the Bending Power histogram
   int power = -3;
   TH1 *h1 = new TH1D("data", "Bending Power", 100, 0, 2);
   h1->GetXaxis()->SetTitle("BP");
-  for(int i = 0; i < 1000; i++) {
-    for(int j = 0; j < N; j++)
-      pass[j] = false;
-    generate(n, N, p0, eff, pass, BP);
+  for (int i = 0; i < 1000; i++) {
+    std::fill_n(pass, N, false);
+    generate(n, N, p0, efficiency, pass, bending_power);
     for (int k = 0; k < N; k++)
       if (pass[k])
-        h1->Fill(BP[k], pow(p0[k], power));
+        h1->Fill(bending_power[k], pow(p0[k], power));
   }
 
-  //Graphing the efficiency of the detector
+  // Graphing the efficiency of the detector
   const int steps = 10;
   double p0x[steps], p0y[steps];
   for (int i = 0; i < steps; i++) {
     p0x[i] = (i + 1) * 100;
-    double cy = (double)(eff[i]);
-    p0y[i] = cy / 1000000;
+    p0y[i] = (double)(efficiency[i]) / 1000000;
   }
-  p0x[0] = 0.1;
+  // p0x[0] = 0.1;
   TGraph *gr1 = new TGraph(steps, p0x, p0y);
   gr1->SetTitle("Efficiency");
   gr1->GetXaxis()->SetTitle("p (GeV)");
   gr1->SetMarkerColor(4);
   gr1->SetMarkerStyle(7);
 
-  //Graphing mean and SD
+  // Graphing mean and SD
   double mean[N], std[N];
   TH1 *ms = new TH1D("0", "mean", 1000, 0, 10);
   for (int i = 0; i < 5; i++) {
     n++;
-    generate(n, N, p0, eff, pass, BP);
+    generate(n, N, p0, eff, pass, bending_power);
     for (int j = 0; j < 1000; j++)
-      for (int k = 0; k < N; k++)
-        ms->Fill(BP[j]);
+      ms->Fill(bending_power[j]);
     mean[i] = ms->GetMean();
     std[i] = ms->GetStdDev();
     ms->Reset();
@@ -63,7 +62,7 @@ int main(int argc, char **argvw)
   gr4->SetMarkerColor(4);
   gr4->SetMarkerStyle(7);
 
-  //Canvas set-up
+  // Canvas set-up
   TCanvas *c = new TCanvas();
   TPad *pad1 = new TPad("pad1", "pad 1", 0, 0.5, 0.5, 1);
   pad1->Draw();
@@ -78,16 +77,18 @@ int main(int argc, char **argvw)
   TPad *pad3 = new TPad("pad3", "pad3", 0, 0, 0.5, 0.5);
   pad3->Draw();
   pad3->cd();
+  pad3->SetLogx();
   gr3->Draw("ALP");
   c->cd();
   TPad *pad4 = new TPad("pad4", "pad4", 0.5, 0, 1, 0.5);
   pad4->Draw();
   pad4->cd();
+  pad4->SetLogx();
   gr4->Draw("ALP");
   c->cd();
   c->Update();
   c->Modified();
   c->Connect("Closed()", "TApplication", gApplication, "Terminate()");
-  //theApp.Run(); //Use this command to open canvas interactively
+  //theApp.Run(); // Use this command to open canvas interactively
   c->SaveAs("graph.png");
 }
