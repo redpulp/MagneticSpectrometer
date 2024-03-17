@@ -7,9 +7,8 @@
 #include <TApplication.h>
 #include <TFile.h>
 #include <cmath>
-#include <ctime>
-#include <algorithm>
 #include "TRandom3.h"
+#include <omp.h>
 
 #define h 0.001 // Resolution used to resolve the differential equations
 #define eff_dist_steps 100

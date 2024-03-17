@@ -7,7 +7,6 @@ int main(int argc, char **argvw)
   const int iter_N = 10000; // Iterations of the simulation
 
   int efficiency[eff_dist_steps] = {};
-  // bool pass[N];
   unsigned short int init_momentum = 0;
 
   // Filling the Bending Power histogram

@@ -12,24 +12,25 @@ void generate_particles(unsigned short int n, int N, int *efficiency, TH1 *h1)
   // Initial momentum distribution
   int power = -3;
 
-  // Defining the magnetic field's components
-  double Bx = 0, By = 0.3, Bz = 0;
-
-  // Particle beam properties
-  double modv, phi, costh, vx, vy, vz, x, y, z;
-
-  // Every particle will be associated to the extremes of its path inside the detector
-  double ax, ay, az, bx, by, bz;
-
-  // Final values to eval
-  double bending_power;
-  double p0;
-
   double square_size = 3.9;
   double cylinder_base_z = 1.95;
 
   TRandom3 *rg = new TRandom3(0);
+  
+  #pragma omp parallel for
   for (int i = 0; i < N; i++) {
+    // Defining the magnetic field's components
+    double Bx = 0, By = 0.3, Bz = 0;
+
+    // Particle beam properties
+    double modv, phi, costh, vx, vy, vz, x, y, z;
+
+    // Every particle will be associated to the extremes of its path inside the detector
+    double ax, ay, az, bx, by, bz;
+
+    // Final values to eval
+    double bending_power;
+    double p0;
     // Generating initial particle position
     x = rg->Uniform(-square_size, square_size);
     y = rg->Uniform(-square_size, square_size);
