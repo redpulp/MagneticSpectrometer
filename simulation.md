@@ -33,7 +33,7 @@ We can get the velocity 3D vector modules as
 
 Where 0 < ϕ < 2π.
 
-#### Motion
+#### Motion integration
 
 Given the following system
 
