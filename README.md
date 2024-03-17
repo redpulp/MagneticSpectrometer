@@ -6,11 +6,12 @@ Two parameters can be tweaked to play with the resolution of the simulation:
 - `h` (initialised in `header.h`) - the resolution used to solve the differential equation in `beam.cpp`
 
 ## How to run locally
+This project was built to use Docker as a Makefile that will output the resulting graphs in `/output/graph.png`, run `build.sh` to build and generate the output. A rundown of what's inside the build file can be found below.
 
-docker exec -t -i magnetic-spectrometer /bin/bash
-
-This project was built to use Docker as a Makefile that will output the resulting graphs in `/output/graph.png`
-
+Create directory for the output
+```
+mkdir output
+```
 Build and run the image
 ```
 docker build -t luciomoriconi/magnetic-spectrometer .
@@ -25,6 +26,3 @@ Kill the container and delete the image
 docker kill magnetic-spectrometer
 docker image rm luciomoriconi/magnetic-spectrometer
 ```
-
-The list of commands can be found in `build.sh`. 
-If you're using Git Bash in your terminal, you might have some issues using the commands separately, so I suggest using `build.sh`.
