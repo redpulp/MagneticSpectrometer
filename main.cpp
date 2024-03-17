@@ -16,8 +16,7 @@ int main(int argc, char **argvw)
   h1->GetXaxis()->SetTitle("BP");
   for (int i = 0; i < 1000; i++)
   {
-    for (int j = 0; j < N; j++)
-      pass[i] = 0;
+    pass = {0};
     generate(n, N, p0, eff, pass, BP);
     for (int k = 0; k < N; k++)
       if (pass[k])
