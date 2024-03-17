@@ -3,7 +3,7 @@ using namespace std;
 int main(int argc, char **argvw)
 {
   TApplication theApp("App", &argc, argvw);
-  int N = 10000;
+  const int N = 10000;  // Number of protons generated for the simulation
   double p0[N];
   double BP[N];
   int eff[10] = {0};
@@ -24,15 +24,15 @@ int main(int argc, char **argvw)
   }
 
   //Graphing the efficiency of the detector
-  double p0x[10], p0y[10];
-  for (int i = 0; i < 10; i++)
-  {
+  const int steps = 10;
+  double p0x[steps], p0y[steps];
+  for (int i = 0; i < steps; i++) {
     p0x[i] = (i + 1) * 100;
     double cy = (double)(eff[i]);
     p0y[i] = cy / 1000000;
   }
   p0x[0] = 0.1;
-  TGraph *gr1 = new TGraph(10, p0x, p0y);
+  TGraph *gr1 = new TGraph(steps, p0x, p0y);
   gr1->SetTitle("Efficiency");
   gr1->GetXaxis()->SetTitle("p (GeV)");
   gr1->SetMarkerColor(4);
@@ -41,8 +41,7 @@ int main(int argc, char **argvw)
   //Graphing mean and SD
   double mean[N], std[N];
   TH1 *ms = new TH1D("0", "mean", 1000, 0, 10);
-  for (int i = 0; i < 5; i++)
-  {
+  for (int i = 0; i < 5; i++) {
     n++;
     generate(n, N, p0, eff, pass, BP);
     for (int j = 0; j < 1000; j++)
@@ -89,6 +88,6 @@ int main(int argc, char **argvw)
   c->Update();
   c->Modified();
   c->Connect("Closed()", "TApplication", gApplication, "Terminate()");
-  // theApp.Run();
+  //theApp.Run(); //Use this command to open canvas interactively
   c->SaveAs("graph.png");
 }
