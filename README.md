@@ -1,5 +1,5 @@
 ## Magnetic-Spectrometer 
-A simulation based on the experiment AMS-02, made to study the bending power and efficiency of the spectrometer when hit with an isotropic beam of protons.  
+A simulation based on the experiment AMS-02, made to study the bending power and efficiency of a spectrometer when hit with an isotropic beam of protons.
 
 Two parameters can be tweaked to play with the resolution of the simulation:
 - `N` (initialised in `main.cpp`) - the number of protons generated in the beam
