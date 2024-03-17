@@ -16,7 +16,7 @@ Build and run the image
 docker build -t luciomoriconi/magnetic-spectrometer .
 docker run -d --rm -it --name magnetic-spectrometer luciomoriconi/magnetic-spectrometer
 ```
-Get the result of the simulation (Change the destination path to `%cd%/output/graph.png` if you're using Command Prompt)
+Get the result of the simulation (change the destination path to `%cd%/output/graph.png` if you're using Command Prompt)
 ```
 docker cp magnetic-spectrometer:/src/graph.png ${PWD}/output/graph.png
 ```
@@ -27,4 +27,4 @@ docker image rm luciomoriconi/magnetic-spectrometer
 ```
 
 The list of commands can be found in `build.sh`. 
-If you're using Git Bash in your terminal, you might some issues if you use the commands separately, so I suggest using `build.sh`
+If you're using Git Bash in your terminal, you might have some issues using the commands separately, so I suggest using `build.sh`.
